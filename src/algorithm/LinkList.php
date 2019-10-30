@@ -2,20 +2,10 @@
 
 namespace MyAlgorithm;
 
-/**
- * 内部类
- */
-class Node {
-	public $data;
-	public $next;
-
-	public function __construct($data = '') {
-		$this->data = $data;
-	}
-}
+use Node;
 
 /**
- * 带头节点的链表
+ * 带头节点的链表,基础版本
  */
 class LinkList {
 	//节点

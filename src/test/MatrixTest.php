@@ -15,7 +15,6 @@ class MatrixOperateTest extends TestCase {
 		$this->t1->setMatrix([
 			[1, 1],
 			[2, 0],
-
 		]);
 
 		$this->t2 = new Matrix();
