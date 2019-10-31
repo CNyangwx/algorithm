@@ -1,6 +1,5 @@
 <?php
 namespace MyAlgorithm;
-
 use MyAlgorithm\Node;
 
 /**
@@ -23,9 +22,9 @@ class LinkListEven {
 	/**
 	 * summary
 	 */
-	public function __construct() {
-		$this->head = new Node();
-		$this->head->next = null;
+	public function __construct($element) {
+		$this->head = new Node($element);
+		$this->head->next = $this->head;
 		$this->current = $this->tail = $this->head;
 		$this->length = 0;
 	}
@@ -33,7 +32,7 @@ class LinkListEven {
 	//插入元素
 	public function insertElement($element) {
 		$new_node = new Node($element);
-		$new_node->next = $this->tail->next;
+		$new_node->next = $this->head;
 		$this->tail->next = $new_node;
 		$this->tail = $new_node;
 		$this->length++;
@@ -67,8 +66,9 @@ class LinkListEven {
 	public function printList() {
 		$arr = [];
 		$p = $this->head;
-		while ($p = $p->next) {
+		while ($p->next != $this->head) {
 			$arr[] = $p->data;
+			$p = $p->next;
 		}
 		echo implode(',', $arr);
 	}
