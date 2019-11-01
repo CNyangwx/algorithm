@@ -10,16 +10,19 @@ use Node;
 class LinkList {
 	//节点
 	public $node;
-	/**
-	 * summary
-	 */
-	public function __construct() {
-		$this->node = new Node();
-		$this->next = null;
+
+	public function __construct($node) {
+		$this->node = $node;
 	}
 
 	public function __destruct() {
-		unset($this->node);
+		$head = $this->node;
+		while ($head && $head->next) {
+			$tmp = $head;
+			$head = $tmp->next;
+			unset($tmp);
+		}
+		echo '__destruct';
 	}
 
 	/**
@@ -27,13 +30,12 @@ class LinkList {
 	 * @param  mixed $element 要插入的元素值
 	 * @return void
 	 */
-	public function insertElementByTail($element) {
+	public function insertElementByTail($new_node) {
 		$p = $this->node;
+
 		while ($p->next) {
 			$p = $p->next;
 		}
-		$new_node = new Node($element);
-		$new_node->next = null;
 		$p->next = $new_node;
 	}
 
