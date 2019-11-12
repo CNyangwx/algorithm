@@ -25,17 +25,22 @@ class LinkStack implements IStack {
 
 	public function __destruct() {
 		$head = $this->botton;
-		if ($head != NULL) {
+		while ($head != NULL) {
 			$p = $head;
-			unset($p);
-			$head = $head->next;
+            $head = $head->next;
+            unset($p);
 		}
-		unset($this->botton);
 	}
 
 	//清空堆栈
 	public function clearStack() {
-		$this->top = $this->botton;
+        $head = $this->botton->next;
+        while ($head != NULL) {
+            $p = $head;
+            $head = $head->next;
+            unset($p);
+        }
+        $this->top=$this->botton;
 		$this->length = 0;
 	}
 	//得到堆栈的长度
@@ -52,11 +57,10 @@ class LinkStack implements IStack {
 	}
 	//弹出栈顶
 	public function pop() {
-		$head = $this->botton;
-		if (!$head || !$head->next) {
+		if ($this->stackEmpty()) {
 			return Status::ERROR;
 		}
-
+        $head = $this->botton;
 		while ($head->next != $this->top) {
 			$head = $head->next;
 		}

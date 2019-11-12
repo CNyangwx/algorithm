@@ -151,4 +151,163 @@ class Solution {
 	function getIntersectionNode($intersectVal, $listA, $listB, $skipA, $skipB) {
 
 	}
+
+    /**
+     * 有效的括号
+     * 给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串，判断字符串是否有效。
+    有效字符串需满足：
+    左括号必须用相同类型的右括号闭合。
+    左括号必须以正确的顺序闭合。
+     * @param String $s
+     * @return Boolean
+     */
+    function isValid($s) {
+        $arr_s_split=str_split(trim($s));
+        $length=count($arr_s_split);
+        $i=0;
+        $stack=[];
+        do{
+            switch ($arr_s_split[$i]){
+                case '(':
+                case '{':
+                case '[':
+                    array_push($stack,$arr_s_split[$i]);
+                    break;
+                case ')':
+                    $left = array_pop($stack);
+                    if ($left!='('){
+                        return false;
+                    }
+                    break;
+                case ']':
+                    $left = array_pop($stack);
+                    if ($left!='['){
+                        return false;
+                    }
+                    break;
+                case '}':
+                    $left = array_pop($stack);
+                    if ($left!='{'){
+                        return false;
+                    }
+                    break;
+            }
+        }while(++$i<$length);
+        if (!empty($stack)){
+            return false;
+        }
+        return true;
+    }
+
+
+    /**
+     * 每日气温
+     * 第一种解法，超出时间限制，时间复杂度为O(N^2)
+     * 根据每日 气温 列表，请重新生成一个列表，
+     * 对应位置的输入是你需要再等待多久温度才会升高超过该日的天数。
+     * 如果之后都不会升高，请在该位置用 0 来代替。
+     * 例:
+     * temperatures = [73, 74, 75, 71, 69, 72, 76, 73]，
+     * 你的输出应该是 [1, 1, 4, 2, 1, 1, 0, 0]。
+     * @param Integer[] $T
+     * @return Integer[]
+     */
+    function _dailyTemperatures($T) {
+        $res=[];
+        for ($i=0;$i<count($T);$i++){
+            $current=$T[$i];
+            $k=0;
+            $t=false;
+            for ($j=$i+1;$j<count($T);$j++){
+                $next=$T[$j];
+                $k++;
+                if ($current<$next) {
+                    $t=true;
+                    break;
+                }
+            }
+            if (!$t){
+                $k=0;
+            }
+            $res[]=$k;
+        }
+        return $res;
+    }
+
+    /**
+     * 每日气温，第二种解法
+     * temperatures = [73, 74, 75, 71, 69, 72, 76, 73]，
+     *
+     * 你的输出应该是 [1, 1, 4, 2, 1, 1, 0, 0]。
+     * @param <Integer>[] $T
+     * @return <Integer>[]
+     */
+    public function dailyTemperatures($T)
+    {
+        $length=count($T);
+        //由于数列到后面有可能呈递减状态，所以先全部赋值为0
+//        $i=0;
+//        while ($i<$length){
+//            $res[$i++]=0;
+//        }
+        $res=array_fill(0,$length,0);
+
+        $tmp=[];
+        for ($i=0;$i<$length;$i++){
+            //如果栈不是空或者数列是递增的则计算差值后保存
+            if (!empty($tmp) && $T[end($tmp)] < $T[$i]){
+                while (!empty($tmp) && $T[end($tmp)] < $T[$i]) {
+                    $res[end($tmp)] = $i - end($tmp);
+                    array_pop($tmp);
+                }
+            }
+            array_push($tmp,$i);
+        }
+        return $res;
+    }
+
+
+    /**
+     * 逆波兰运算
+     * @param String[] $tokens
+     * @return Integer
+     */
+    function evalRPN($tokens) {
+        //初始化一个运算栈
+        $num_stack=[];
+        $i=0;
+        $length=count($tokens);
+        do{
+            switch ($tokens[$i]){
+                case '+':
+                    $num1=array_pop($num_stack);
+                    $num2=array_pop($num_stack);
+                    array_push($num_stack,$num1+$num2);
+                    break;
+                case '-':
+                    $num2=array_pop($num_stack);
+                    $num1=array_pop($num_stack);
+                    array_push($num_stack,$num1-$num2);
+                    break;
+                case '*':
+                    $num1=array_pop($num_stack);
+                    $num2=array_pop($num_stack);
+                    array_push($num_stack,$num1*$num2);
+                    break;
+                case '/':
+                    $num2=array_pop($num_stack);
+                    $num1=array_pop($num_stack);
+                    if ($num2==0){
+                        return 0;
+                    }
+                    array_push($num_stack,intval($num1/$num2));
+                    break;
+                default:
+                    array_push($num_stack,$tokens[$i]);
+            }
+        }while(++$i<$length);
+
+        return end($num_stack);
+    }
+
 }
