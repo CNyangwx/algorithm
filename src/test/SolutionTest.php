@@ -62,6 +62,8 @@ class SolutionTest extends TestCase {
         $val = $this->solution->evalRPN(["10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"]);
         $this->assertEquals(22,$val);
     }
+    
+    
 
 
 }

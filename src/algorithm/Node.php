@@ -7,7 +7,7 @@ namespace MyAlgorithm;
  */
 class Node {
 	public $data;
-	public $next;
+	public $next=NULL;
 
 	public function __construct($data = '') {
 		$this->data = $data;
