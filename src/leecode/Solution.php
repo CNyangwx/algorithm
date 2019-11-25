@@ -309,5 +309,297 @@ class Solution {
 
         return end($num_stack);
     }
-
+    
+    /**
+     * @param Node $l
+     * @return int
+     */
+    public function getLength($l){
+        $p=$l;
+        $length=0;
+        while($p->next){
+            $length++;
+            $p=$p->next;
+        }
+        return $length;
+    }
+    
+    function addTwoNumbers($l1, $l2) {
+        $is_l1=false;
+        //就是将p1置为长链，p2置为短链，不再开额外空间
+        if($this->getLength($l1) >= $this->getLength($l2)){
+            $p1=$l1;
+            $p2=$l2;
+            $is_l1=true;
+        }else{
+            $p1=$l2;
+            $p2=$l1;
+        }
+        
+        var_dump($this->getLength($l1),$this->getLength($l2));
+    
+        $jin=0;
+        while(!$p1 && !$p2){
+            $sum = $p1->val+$p2->val;
+            $jin=intval($sum/10);
+            $left=intval($sum%10);
+            $p1->val=$left;
+            $p1=$p1->next;
+            $p2=$p2->next;
+            $p1->val +=$jin;
+        }
+        //处理最大位还有进制的问题
+        if($jin!=0 && !$p1){
+            $more_node = new ListNode($jin);
+            $p1->next=$more_node;
+        }
+        
+        return $is_l1?$l1:$l2;
+    }
+    
+    /**
+     * 二进制求和
+     * @param String $a
+     * @param String $b
+     * @return String
+     */
+    function addBinary($a, $b) {
+        $jin_val=2;
+        
+        $a_i=strlen($a)-1;
+        $b_j=strlen($b)-1;
+        
+        $jin=0;
+        $result=[];
+        // 1 111
+        while ($a_i >= 0 || $b_j >=0 )
+        {
+            $a_i_val= $a_i<0 ? 0 : $a[$a_i]-'0';
+            $b_j_val= $b_j<0 ? 0 : $b[$b_j]-'0';
+            $num=$a_i_val+$b_j_val+$jin;
+            array_push($result,intval($num%$jin_val));
+            $jin=intval($num/$jin_val);
+            $a_i--;
+            $b_j--;
+        }
+        
+        if ($jin!=0){
+            array_push($result,1);
+        }
+        
+        return implode(array_reverse($result));
+    }
+    
+    /**
+     * 给定一个 haystack 字符串和一个 needle 字符串，
+     * 在 haystack 字符串中找出 needle 字符串出现的第一个位置 (从0开始)。
+     * 如果不存在，则返回  -1。若needle为空字符串，则返回0
+     * @param String $haystack
+     * @param String $needle
+     * @return Integer 位序
+     */
+    function strStr($haystack, $needle):int {
+        if ($needle==''){
+            return 0;
+        }
+        $i=0;
+        $j=0;
+        while ($i<strlen($haystack) && $j<strlen($needle)){
+            if ($haystack[$i]==$needle[$j]) {
+                $i++;
+                $j++;
+            }else{
+                $i=$i-$j+1;
+                $j=0;
+            }
+        }
+        if ($j>=strlen($needle)){
+            return $i-$j+1;
+        }
+        return -1;
+    }
+    
+    /**
+     * @param String[] $strs
+     * @return String
+     */
+    function longestCommonPrefix($strs) {
+        if (count($strs)==0 || empty($strs[0])){
+            return '';
+        }
+        $long=$strs[0];
+        
+        // flower flow flew
+        for ($j=1;$j<count($strs);$j++){
+            for ($i = 0; $i < strlen($long); $i++) {
+                if ($long[$i]!=$strs[$j][$i]){
+                    $long=substr($long,0,$i);
+                    break;
+                }
+            }
+        }
+        
+        return $long;
+    }
+    
+    /**
+     * 寻找数组里的中心节点
+     * @param $nums
+     * @return int
+     */
+    function pivotIndex($nums) {
+        $nums_length=count($nums);
+        if ($nums_length<3){
+            return -1;
+        }
+        
+        $total_sum=array_sum($nums);
+        $left=0;
+        $nums[-1]=0;
+        for ($i=-1;$i<$nums_length/2+1;$i++){
+            $left+=$nums[$i];
+            if (2*$left+$nums[$i+1]==$total_sum){
+                return $i+1;
+            }
+        }
+        
+        return -1;
+    }
+    
+    /**
+     * 求数组中最大值是否是其他数值的2倍
+     * @param $nums
+     * @return int
+     */
+    function dominantIndex($nums) {
+        
+        $nums_length=count($nums);
+        $max=$second=PHP_INT_MIN;
+        $pos=-1;
+        for($i=0;$i<$nums_length;++$i){
+           if ($max<$nums[$i]){
+               $second=$max;
+               $max=$nums[$i];
+               $pos=$i;
+           }elseif ($nums[$i]>$second){
+               $second=$nums[$i];
+           }
+        }
+        
+        return $max>=2*$second?$pos:-1;
+    }
+    
+    /**
+     * 有M*N的数组，求他们的对角线遍历
+     * i,j
+     * @param Integer[][] $matrix
+     * @return Integer[]
+     */
+    function findDiagonalOrder($matrix) {
+        if (!is_array($matrix) || !isset($matrix[0][0])){
+            return [];
+        }
+        $i=0;
+        $j=0;
+        $director=[0=>[-1,1],1=>[1,-1]];
+        //遍历右上角
+        $d=0;
+        $result=[];
+        $m=count($matrix) ;
+        $n=count($matrix[0]);
+        $k=0;
+        while ($k++ != $m*$n ){
+            $result[]=$matrix[$i][$j];
+            $director_d=$director[$d];
+            $need_change_d=false;
+            //左上角移动
+            if ($d==0){
+                if ($j==$n-1){
+                    //到达最右上角
+                    $i++;
+                    $need_change_d=true;
+                }elseif ($i==0){
+                    //到达顶部
+                    $j++;
+                    $need_change_d=true;
+                }
+            }else{
+                //右下角移动
+                if ($i==$m-1){
+                    $j++;
+                    $need_change_d=true;
+                }elseif ($j==0){
+                    $i++;
+                    $need_change_d=true;
+                }
+            }
+            
+            if ($need_change_d){
+                $d=($d+1)%2;
+            }else{
+                $i+=$director_d[0];
+                $j+=$director_d[1];
+            }
+        }
+        return $result;
+        
+    }
+    
+    function spiralOrder($matrix) {
+        if (!is_array($matrix) || !isset($matrix[0][0])){
+            return [];
+        }
+        $i=0;
+        $j=0;
+        //顺时间旋转 左 下 右 上
+        $director=[0=>[0,1],1=>[1,0],2=>[0,-1],3=>[-1,0]];
+        //初始从左边开始
+        $d=0;
+        $result=[];
+        $m=count($matrix) ;
+        $n=count($matrix[0]);
+        $k=0;
+        $r=0;
+        while ($k++ != $m*$n ) {
+            $need_change_d = FALSE;
+            $result[] = $matrix[$i][$j];
+            $director_d = $director[$d];
+            switch ($d){
+                case 0:
+                    if ($j==$n-1-$r){
+                        $i+=1;
+                        $need_change_d=true;
+                    }
+                    break;
+                case 1:
+                    if ($i==$m-1-$r){
+                        $j-=1;
+                        $need_change_d=true;
+                    }
+                    break;
+                case 2:
+                    if ($j==$r){
+                        $i-=1;
+                        $need_change_d=true;
+                    }
+                    break;
+                case 3:
+                    //当向上遍历到第r层的时候，需要改变方向
+                    if ($i==$r+1){
+                        $r=$r+1;
+                        $j+=1;
+                        $need_change_d=true;
+                    }
+                    break;
+            }
+            if ($need_change_d){
+                $d=($d+1)%4;
+            }else{
+                $i+=$director_d[0];
+                $j+=$director_d[1];
+            }
+        }
+        return $result;
+        
+    }
 }

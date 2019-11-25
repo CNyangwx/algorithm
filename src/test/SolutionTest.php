@@ -63,6 +63,58 @@ class SolutionTest extends TestCase {
         $this->assertEquals(22,$val);
     }
     
+    public function stringdataProvider()
+    {
+        return [
+            'example01'=>['11','1','100'],
+            'example02'=>['1010','1011','10101'],
+            'example03'=>['1','111','1000'],
+            'example04'=>['1111','1111',"11110"],
+        ];
+    }
+    
+    /**
+     * @dataProvider stringdataProvider
+     * 字符串进制相加
+     */
+    public function testAddBinary($a,$b,$expected)
+    {
+        $this->assertEquals($expected,$this->solution->addBinary($a,$b));
+    }
+    
+    
+    public function testPivotIndex()
+    {
+//        $arr=[-1,-1,-1,0,1,1];
+        $arr=[1, 7, 3, 6, 5, 6];
+        $this->assertEquals(0,$this->solution->pivotIndex($arr));
+    }
+    
+    public function testlongestCommonPrefix()
+    {
+        $long=$this->solution->longestCommonPrefix(["flower","flow","flight"]);
+        $this->assertEquals("fl",$long);
+    }
+    
+    public function testdominantIndex()
+    {
+        $arr=[0,0,3,2];
+        $this->assertEquals(3,$this->solution->dominantIndex($arr));
+    }
+    
+    public function testFindDiagonalOrder()
+    {
+        $arr=[
+            [1,2,3,4],
+            [5,6,7,8],
+            [9,10,11,12],
+            [13,14,15,16]
+        ];
+        
+        $result=$this->solution->spiralOrder($arr);
+        $this->assertEquals([1,2,3,4,8,12,11,10,9,5,6,7],$result);
+    
+    }
     
 
 

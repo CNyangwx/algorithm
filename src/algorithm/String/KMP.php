@@ -24,6 +24,7 @@ class KMP extends MyIndex
      */
     public function index($search_str,$position=0)
     {
+        
         //将下标从0变为1
         $search_str=' '.$search_str;
         $i=$position;
